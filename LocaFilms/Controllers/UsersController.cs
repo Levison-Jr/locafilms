@@ -7,5 +7,10 @@ namespace LocaFilms.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        [HttpGet]
+        public string GetAllUsers()
+        {
+            return "Hello, World!";
+        }
     }
 }
