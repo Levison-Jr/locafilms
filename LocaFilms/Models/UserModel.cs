@@ -14,6 +14,6 @@ namespace LocaFilms.Models
         public DateTime RegistrationDate { get; set; }
         public decimal Balance { get; set; }
 
-        public IList<MovieModel> MoviesRented { get; set; }
+        public IList<MovieRentals> MovieRentals { get; set; }
     }
 }
