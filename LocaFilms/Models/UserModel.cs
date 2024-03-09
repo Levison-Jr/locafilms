@@ -11,6 +11,7 @@ namespace LocaFilms.Models
         public string Email { get; set; }
         public string Phone { get; set; }
         public PerfilEnum Perfil { get; set; }
+        public bool IsActive { get; set; }
         public DateTime RegistrationDate { get; set; }
         public decimal Balance { get; set; }
 
