@@ -3,7 +3,7 @@
     public enum PerfilEnum
     {
         Admin = 1,
-        Employee,
-        Customer
+        Funcionario,
+        Cliente
     }
 }

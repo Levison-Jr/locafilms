@@ -2,7 +2,7 @@
 {
     public enum CategoryEnum
     {
-        Ação,
+        Ação = 1,
         Terror,
         Comédia,
         Drama,
