@@ -29,12 +29,12 @@ namespace LocaFilms.Contexts
             modelBuilder.Entity<MovieModel>()
                 .Property(m => m.CostPerDay)
                 .HasColumnType("decimal")
-                .HasPrecision(20,3);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<UserModel>()
                 .Property(u => u.Balance)
-                .HasColumnType("deciamal")
-                .HasPrecision(20, 2);
+                .HasColumnType("decimal")
+                .HasPrecision(18, 2);
         }
 
         DbSet<UserModel> Users { get; set; }
