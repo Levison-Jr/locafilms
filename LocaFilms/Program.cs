@@ -1,5 +1,7 @@
 
 using LocaFilms.Contexts;
+using LocaFilms.Repository;
+using LocaFilms.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace LocaFilms
@@ -21,6 +23,9 @@ namespace LocaFilms
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MainConnection"));
             });
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 
