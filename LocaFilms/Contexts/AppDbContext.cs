@@ -37,8 +37,8 @@ namespace LocaFilms.Contexts
                 .HasPrecision(18, 2);
         }
 
-        DbSet<UserModel> Users { get; set; }
-        DbSet<MovieModel> Movies { get; set; }
-        DbSet<MovieRentals> MovieRentals { get; set; }
+        public DbSet<UserModel> Users { get; set; }
+        public DbSet<MovieModel> Movies { get; set; }
+        public DbSet<MovieRentals> MovieRentals { get; set; }
     }
 }
