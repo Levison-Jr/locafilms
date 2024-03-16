@@ -3,6 +3,7 @@ using LocaFilms.Contexts;
 using LocaFilms.Repository;
 using LocaFilms.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace LocaFilms
 {
@@ -14,7 +15,9 @@ namespace LocaFilms
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -26,6 +29,8 @@ namespace LocaFilms
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddAutoMapper(typeof(Program));
 
             var app = builder.Build();
 
