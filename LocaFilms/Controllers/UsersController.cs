@@ -30,6 +30,17 @@ namespace LocaFilms.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            UserModel? user = await _userService.GetUserByIdAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<UserModel, UserDto>(user));
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserDto createUserDto)
         {
@@ -40,7 +51,7 @@ namespace LocaFilms.Controllers
                 return BadRequest(result.Message);
 
             return CreatedAtAction(
-                actionName: nameof(CreateUser),
+                actionName: nameof(GetUserById),
                 routeValues: new { id = user.Id },
                 value: _mapper.Map<UserModel?, UserDto>(result.User));
         }
