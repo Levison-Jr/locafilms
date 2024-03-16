@@ -17,6 +17,7 @@ namespace LocaFilms.Repository
         public async Task AddAsync(UserModel user)
         {
             await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
         }     
     }
 }
