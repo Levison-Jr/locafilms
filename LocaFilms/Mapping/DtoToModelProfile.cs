@@ -20,6 +20,8 @@ namespace LocaFilms.Mapping
                 .ForMember(dest =>
                 dest.Balance,
                 opt => opt.MapFrom(_ => 0));
+
+            CreateMap<UpdateUserDto, UserModel>();
         }
     }
 }
