@@ -1,4 +1,5 @@
-﻿using LocaFilms.Dtos;
+﻿using AutoMapper;
+using LocaFilms.Dtos;
 using LocaFilms.Models;
 using LocaFilms.Services;
 using Microsoft.AspNetCore.Http;
@@ -12,23 +13,27 @@ namespace LocaFilms.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var result = await _userService.GetAllUsersAsync();
+            var users = await _userService.GetAllUsersAsync();
+            var result = _mapper.Map<IEnumerable<UserModel>, IEnumerable<UserDto>>(users);
 
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(UserModel user)
+        public async Task<IActionResult> CreateUser(CreateUserDto createUserDto)
         {
+            var user = _mapper.Map<CreateUserDto, UserModel>(createUserDto);
             var result = await _userService.CreateUserAsync(user);
 
             if (!result.Success)
@@ -37,7 +42,7 @@ namespace LocaFilms.Controllers
             return CreatedAtAction(
                 actionName: nameof(CreateUser),
                 routeValues: new { id = user.Id },
-                value: result.User);
+                value: _mapper.Map<UserModel?, UserDto>(result.User));
         }
     }
 }
