@@ -7,6 +7,7 @@ namespace LocaFilms.Services
     {
         Task<IEnumerable<UserModel>> GetAllUsersAsync();
         Task<UserModel?> GetUserByIdAsync(int id);
-        Task<CreateUserResponse> CreateUserAsync(UserModel user);
+        Task<SaveUserResponse> CreateUserAsync(UserModel user);
+        Task<SaveUserResponse> UpdateUserAsync(int id, UserModel user);
     }
 }

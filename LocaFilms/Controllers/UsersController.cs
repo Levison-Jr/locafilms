@@ -55,5 +55,17 @@ namespace LocaFilms.Controllers
                 routeValues: new { id = user.Id },
                 value: _mapper.Map<UserModel?, UserDto>(result.User));
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateUser(int id, UpdateUserDto updateUserDto)
+        {
+            var user = _mapper.Map<UpdateUserDto, UserModel>(updateUserDto);
+            var result = await _userService.UpdateUserAsync(id, user);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return NoContent();
+        }
     }
 }

@@ -7,5 +7,6 @@ namespace LocaFilms.Repository
         Task<IEnumerable<UserModel>> ListAsync();
         Task<UserModel?> GetByIsAsync(int id);
         Task AddAsync(UserModel user);
+        Task UpdateAsync(UserModel user);
     }
 }
