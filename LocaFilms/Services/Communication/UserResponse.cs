@@ -2,11 +2,11 @@
 
 namespace LocaFilms.Services.Communication
 {
-    public class SaveUserResponse : BaseResponse
+    public class UserResponse : BaseResponse
     {
         public UserModel? User { get; set; }
 
-        private SaveUserResponse(bool success, string message, UserModel? user) : base(success, message)
+        private UserResponse(bool success, string message, UserModel? user) : base(success, message)
         {
             User = user;
         }
@@ -16,7 +16,7 @@ namespace LocaFilms.Services.Communication
         /// </summary>
         /// <param name="user">User que foi criado.</param>
         /// <returns>Resposta de sucesso formatada.</returns>
-        public SaveUserResponse(UserModel user) : this(true, string.Empty, user)
+        public UserResponse(UserModel user) : this(true, string.Empty, user)
         { }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace LocaFilms.Services.Communication
         /// </summary>
         /// <param name="message">Mensagem de erro que ocorreu na operação.</param>
         /// <returns>Resposta de falha formatada.</returns>
-        public SaveUserResponse(string message) : this(false, message, null)
+        public UserResponse(string message) : this(false, message, null)
         { }
     }
 }
