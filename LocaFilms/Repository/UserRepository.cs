@@ -31,5 +31,11 @@ namespace LocaFilms.Repository
             _appDbContext.Users.Update(user);
             await _appDbContext.SaveChangesAsync();
         }
+
+        public async Task DeleteAsync(UserModel user)
+        {
+            _appDbContext.Users.Remove(user);
+            await _appDbContext.SaveChangesAsync();
+        }
     }
 }

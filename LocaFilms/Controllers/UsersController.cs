@@ -67,5 +67,16 @@ namespace LocaFilms.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var result = await _userService.DeleteUserAsync(id);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return NoContent();
+        }
     }
 }
