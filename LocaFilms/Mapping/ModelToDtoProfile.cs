@@ -9,6 +9,7 @@ namespace LocaFilms.Mapping
         public ModelToDtoProfile()
         {
             CreateMap<UserModel, UserDto>();
+            CreateMap<MovieModel, MovieDto>();
         }
     }
 }
