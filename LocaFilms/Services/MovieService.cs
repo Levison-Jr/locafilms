@@ -1,5 +1,6 @@
 ﻿using LocaFilms.Models;
 using LocaFilms.Repository;
+using LocaFilms.Services.Communication;
 
 namespace LocaFilms.Services
 {
@@ -21,9 +22,22 @@ namespace LocaFilms.Services
 
         public async Task<MovieModel?> GetMovieByIdAsync(int id)
         {
-            var movie = await _movieRepository.GetMovieById(id);
+            var movie = await _movieRepository.GetByIdAsync(id);
 
             return movie;
+        }
+
+        public async Task<MovieResponse> CreateMovieAsync(MovieModel movie)
+        {
+            try
+            {
+                await _movieRepository.AddAsync(movie);
+                return new MovieResponse(movie);
+            }
+            catch (Exception ex)
+            {
+                return new MovieResponse($"Houve um erro ao tentar criar o movie. Erro: {ex.Message}");
+            }
         }
     }
 }

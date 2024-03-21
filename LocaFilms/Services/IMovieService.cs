@@ -1,4 +1,5 @@
 ﻿using LocaFilms.Models;
+using LocaFilms.Services.Communication;
 
 namespace LocaFilms.Services
 {
@@ -6,5 +7,6 @@ namespace LocaFilms.Services
     {
         Task<IEnumerable<MovieModel>> GetAllMoviesAsync();
         Task<MovieModel?> GetMovieByIdAsync(int id);
+        Task<MovieResponse> CreateMovieAsync(MovieModel movie);
     }
 }

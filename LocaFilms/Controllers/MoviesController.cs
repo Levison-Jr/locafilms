@@ -39,5 +39,20 @@ namespace LocaFilms.Controllers
 
             return Ok(movie);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMovie(CreateMovieDto createMovieDto)
+        {
+            var movie = _mapper.Map<CreateMovieDto, MovieModel>(createMovieDto);
+            var result = await _movieService.CreateMovieAsync(movie);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return CreatedAtAction(
+                actionName: nameof(GetMovieById),
+                routeValues: new { id = movie.Id },
+                value: _mapper.Map<MovieModel?, MovieDto>(result.Movie));
+        }
     }
 }

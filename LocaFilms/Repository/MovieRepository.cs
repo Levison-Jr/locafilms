@@ -14,9 +14,15 @@ namespace LocaFilms.Repository
             return await _appDbContext.Movies.ToListAsync();
         }
 
-        public async Task<MovieModel?> GetMovieById(int id)
+        public async Task<MovieModel?> GetByIdAsync(int id)
         {
             return await _appDbContext.Movies.FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task AddAsync(MovieModel movie)
+        {
+            await _appDbContext.AddAsync(movie);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }
