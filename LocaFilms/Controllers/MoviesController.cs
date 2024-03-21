@@ -4,6 +4,7 @@ using LocaFilms.Models;
 using LocaFilms.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 
 namespace LocaFilms.Controllers
 {
@@ -53,6 +54,29 @@ namespace LocaFilms.Controllers
                 actionName: nameof(GetMovieById),
                 routeValues: new { id = movie.Id },
                 value: _mapper.Map<MovieModel?, MovieDto>(result.Movie));
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateMovie(int id, UpdateMovieDto updateMovieDto)
+        {
+            var movie = _mapper.Map<UpdateMovieDto, MovieModel>(updateMovieDto);
+            var result = await _movieService.UpdateMovieAsync(id, movie);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteMovie(int id)
+        {
+            var result = await _movieService.DeleteMovieAsync(id);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return NoContent();
         }
     }
 }

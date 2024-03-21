@@ -39,5 +39,49 @@ namespace LocaFilms.Services
                 return new MovieResponse($"Houve um erro ao tentar criar o movie. Erro: {ex.Message}");
             }
         }
+
+        public async Task<MovieResponse> UpdateMovieAsync(int id, MovieModel movie)
+        {
+            var movieToUpdate = await GetMovieByIdAsync(id);
+
+            if (movieToUpdate == null)
+                return new MovieResponse($"O Movie com o id = {id} não existe.");
+
+            movieToUpdate.Title = movie.Title;
+            movieToUpdate.Description = movie.Description;
+            movieToUpdate.Category = movie.Category;
+            movieToUpdate.IsAvailable = movie.IsAvailable;
+            movieToUpdate.CostPerDay = movie.CostPerDay;
+            movieToUpdate.NumberPhysicalMedia = movie.NumberPhysicalMedia;
+            movieToUpdate.LastModifiedDateTime = movie.LastModifiedDateTime;
+
+            try
+            {
+                await _movieRepository.UpdateAsync(movieToUpdate);
+                return new MovieResponse(movieToUpdate);
+            }
+            catch (Exception ex)
+            {
+                return new MovieResponse($"Houve um erro ao tentar atualizar o Movie (id = {id}). Erro: {ex.Message}");
+            }
+        }
+
+        public async Task<MovieResponse> DeleteMovieAsync(int id)
+        {
+            var movieToDelete = await GetMovieByIdAsync(id);
+
+            if (movieToDelete == null)
+                return new MovieResponse($"O Movie com o id = {id} não existe.");
+
+            try
+            {
+                await _movieRepository.DeleteAsync(movieToDelete);
+                return new MovieResponse(movieToDelete);
+            }
+            catch (Exception ex)
+            {
+                return new MovieResponse($"Houve um erro ao tentar deletar o Movie (id = {id}). Erro: {ex.Message}");
+            }
+        }
     }
 }

@@ -24,5 +24,17 @@ namespace LocaFilms.Repository
             await _appDbContext.AddAsync(movie);
             await _appDbContext.SaveChangesAsync();
         }
+
+        public async Task UpdateAsync(MovieModel movie)
+        {
+            _appDbContext.Update(movie);
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(MovieModel movie)
+        {
+            _appDbContext.Remove(movie);
+            await _appDbContext.SaveChangesAsync();
+        }
     }
 }

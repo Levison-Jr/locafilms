@@ -8,5 +8,7 @@ namespace LocaFilms.Services
         Task<IEnumerable<MovieModel>> GetAllMoviesAsync();
         Task<MovieModel?> GetMovieByIdAsync(int id);
         Task<MovieResponse> CreateMovieAsync(MovieModel movie);
+        Task<MovieResponse> UpdateMovieAsync(int id, MovieModel movie);
+        Task<MovieResponse> DeleteMovieAsync(int id);
     }
 }
