@@ -19,7 +19,7 @@ namespace LocaFilms.Services
 
         public async Task<UserModel?> GetUserByIdAsync(int id)
         {
-            return await _userRepository.GetByIsAsync(id);
+            return await _userRepository.GetByIdAsync(id);
         }
 
         public async Task<UserResponse> CreateUserAsync(UserModel user)

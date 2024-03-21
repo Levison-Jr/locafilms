@@ -14,7 +14,7 @@ namespace LocaFilms.Repository
             return await _appDbContext.Users.ToListAsync();
         }
 
-        public async Task<UserModel?> GetByIsAsync(int id)
+        public async Task<UserModel?> GetByIdAsync(int id)
         {
             UserModel? user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
             return user;
