@@ -22,6 +22,19 @@ namespace LocaFilms.Mapping
                 opt => opt.MapFrom(_ => 0));
 
             CreateMap<UpdateUserDto, UserModel>();
+
+            CreateMap<CreateMovieDto, MovieModel>()
+                .ForMember(dest =>
+                dest.IsAvailable,
+                opt => opt.MapFrom(_ => true))
+
+                .ForMember(dest =>
+                dest.RegistrationDateTime,
+                opt => opt.MapFrom(_ => DateTime.Now))
+                
+                .ForMember(dest =>
+                dest.LastModifiedDateTime,
+                opt => opt.MapFrom(_ => DateTime.Now));
         }
     }
 }
