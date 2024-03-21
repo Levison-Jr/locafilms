@@ -1,9 +1,11 @@
-﻿namespace LocaFilms.Dtos
+﻿using LocaFilms.Enums;
+
+namespace LocaFilms.Dtos
 {
     public record CreateMovieDto(
         string Title,
         string Description,
-        string Category,
+        CategoryEnum Category,
         decimal CostPerDay,
         int NumberPhysicalMedia);
 }
