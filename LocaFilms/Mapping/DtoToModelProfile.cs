@@ -35,6 +35,11 @@ namespace LocaFilms.Mapping
                 .ForMember(dest =>
                 dest.LastModifiedDateTime,
                 opt => opt.MapFrom(_ => DateTime.Now));
+
+            CreateMap<UpdateMovieDto, MovieModel>()
+                .ForMember(dest =>
+                dest.LastModifiedDateTime,
+                opt => opt.MapFrom(_ => DateTime.Now));
         }
     }
 }
