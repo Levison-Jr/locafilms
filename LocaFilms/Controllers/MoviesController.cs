@@ -2,9 +2,7 @@
 using LocaFilms.Dtos;
 using LocaFilms.Models;
 using LocaFilms.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
 
 namespace LocaFilms.Controllers
 {
