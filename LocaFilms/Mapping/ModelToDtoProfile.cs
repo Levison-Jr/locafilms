@@ -10,6 +10,7 @@ namespace LocaFilms.Mapping
         {
             CreateMap<UserModel, UserDto>();
             CreateMap<MovieModel, MovieDto>();
+            CreateMap<MovieRentals, RentalDto>();
         }
     }
 }
