@@ -4,7 +4,7 @@ namespace LocaFilms.Repository
 {
     public interface IRentalRepository
     {
-        Task AddAsync(UserModel user, MovieModel movie);
-        Task UpdateAsync(UserModel user, MovieModel movie);
+        Task AddAsync(MovieRentals movieRental);
+        Task UpdateAsync(MovieRentals movieRental);
     }
 }

@@ -25,9 +25,9 @@ namespace LocaFilms.Controllers
             var result = await _rentalService.CreateRental(movieRental);
 
             if (!result.Success)
-                return BadRequest($"Não foi possível criar o aluguel. Erro: ${result.Message}");
+                return BadRequest($"Não foi possível criar o aluguel. Erro: {result.Message}");
 
-            return Ok(result);
+            return Created();
         }
     }
 }

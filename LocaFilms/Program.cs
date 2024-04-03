@@ -32,6 +32,9 @@ namespace LocaFilms
             builder.Services.AddScoped<IMovieRepository, MovieRepository>();
             builder.Services.AddScoped<IMovieService, MovieService>();
 
+            builder.Services.AddScoped<IRentalRepository, RentalRepository>();
+            builder.Services.AddScoped<IRentalService, RentalService>();
+
             builder.Services.AddAutoMapper(typeof(Program));
 
             var app = builder.Build();
