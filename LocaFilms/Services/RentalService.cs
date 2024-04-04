@@ -20,12 +20,15 @@ namespace LocaFilms.Services
             _movieService = movieService;
         }
 
+        public async Task<IEnumerable<MovieRentals>> GetByUserId(int userId)
+        {
+            return await _rentalRepository.GetByUserIdAsync(userId);
+        }
+
         public async Task<RentalResponse> CreateRental(MovieRentals movieRental)
         {
             var user = await _userService.GetUserByIdAsync(movieRental.UserId);
             var movie = await _movieService.GetMovieByIdAsync(movieRental.MovieId);
-
-            //await Task.WhenAll(user, movie);
 
             if (user == null || movie == null)
                 return new RentalResponse("O usuário e/ou o filme não está cadastrado.");

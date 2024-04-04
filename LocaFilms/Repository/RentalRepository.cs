@@ -1,5 +1,6 @@
 ﻿using LocaFilms.Contexts;
 using LocaFilms.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace LocaFilms.Repository
 {
@@ -7,6 +8,11 @@ namespace LocaFilms.Repository
     {
         public RentalRepository(AppDbContext appDbContext) : base(appDbContext)
         {}
+
+        public async Task<IEnumerable<MovieRentals>> GetByUserIdAsync(int id)
+        {
+            return await _appDbContext.MovieRentals.Where(x => x.UserId == id).ToListAsync();
+        }
 
         public async Task AddAsync(MovieRentals movieRental)
         {

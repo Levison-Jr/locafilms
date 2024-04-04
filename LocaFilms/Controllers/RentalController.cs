@@ -18,6 +18,15 @@ namespace LocaFilms.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("user/{id:int}")]
+        public async Task<IActionResult> GetRentalByUserId(int id)
+        {
+            var rentals = await _rentalService.GetByUserId(id);
+            var result = _mapper.Map<IEnumerable<MovieRentals>, IEnumerable<RentalDto>>(rentals);
+            
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateRental(CreateRentalDto createRentalDto)
         {
