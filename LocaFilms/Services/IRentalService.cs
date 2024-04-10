@@ -8,5 +8,6 @@ namespace LocaFilms.Services
         Task<IEnumerable<MovieRentals>> GetByUserId(int userId);
         Task<RentalResponse> CreateRental(MovieRentals movieRental);
         Task<RentalResponse> UpdateRental(MovieRentals movieRental);
+        Task<RentalResponse> DeleteRental(int userId, int movieId);
     }
 }

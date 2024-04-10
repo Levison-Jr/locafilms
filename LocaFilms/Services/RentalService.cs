@@ -44,9 +44,44 @@ namespace LocaFilms.Services
             }        
         }
 
-        public Task<RentalResponse> UpdateRental(MovieRentals movieRental)
+        public async Task<RentalResponse> UpdateRental(MovieRentals movieRental)
         {
-            throw new NotImplementedException();
+            var rentalToUpdate = await _rentalRepository.GetByUserMovieIds(movieRental.UserId, movieRental.MovieId);
+
+            if (rentalToUpdate == null)
+                return new RentalResponse($"Não existe um aluguel do usuário com id {movieRental.UserId} para o filme com id {movieRental.MovieId}");
+
+            rentalToUpdate.RentalEndDate = movieRental.RentalEndDate;
+            rentalToUpdate.RentalStatus = movieRental.RentalStatus;
+            rentalToUpdate.PaymentStatus = movieRental.PaymentStatus;
+
+            try
+            {
+                await _rentalRepository.UpdateAsync(rentalToUpdate);
+                return new RentalResponse(rentalToUpdate);
+            }
+            catch (Exception ex)
+            {
+                return new RentalResponse($"Não foi possível atualizar o MovieRental. Erro: {ex.Message}");
+            }
+        }
+
+        public async Task<RentalResponse> DeleteRental(int userId, int movieId)
+        {
+            var rentalToDelete = await _rentalRepository.GetByUserMovieIds(userId, movieId);
+
+            if (rentalToDelete == null)
+                return new RentalResponse($"Não existe um aluguel do usuário com id {userId} para o filme com id {movieId}");
+
+            try
+            {
+                await _rentalRepository.DeleteAsync(rentalToDelete);
+                return new RentalResponse(rentalToDelete);
+            }
+            catch (Exception ex)
+            {
+                return new RentalResponse($"Não foi possível deletar o MovieRental. Erro: {ex.Message}");
+            }
         }
     }
 }

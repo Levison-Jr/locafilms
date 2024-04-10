@@ -6,7 +6,7 @@ namespace LocaFilms.Services.Communication
     {
         public MovieRentals? MovieRental { get; set; }
 
-        public RentalResponse(bool success, string message, MovieRentals? movieRental) : base(success, message)
+        private RentalResponse(bool success, string message, MovieRentals? movieRental) : base(success, message)
         {
             MovieRental = movieRental;
         }

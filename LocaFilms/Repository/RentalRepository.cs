@@ -14,15 +14,27 @@ namespace LocaFilms.Repository
             return await _appDbContext.MovieRentals.Where(x => x.UserId == id).ToListAsync();
         }
 
+        public async Task<MovieRentals?> GetByUserMovieIds(int userId, int movieId)
+        {
+            return await _appDbContext.MovieRentals.FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId);
+        }
+
         public async Task AddAsync(MovieRentals movieRental)
         {
             await _appDbContext.MovieRentals.AddAsync(movieRental);
             await _appDbContext.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(MovieRentals movieRental)
+        public async Task UpdateAsync(MovieRentals movieRental)
         {
-            throw new NotImplementedException();
+            _appDbContext.MovieRentals.Update(movieRental);
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(MovieRentals movieRental)
+        {
+            _appDbContext.MovieRentals.Remove(movieRental);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

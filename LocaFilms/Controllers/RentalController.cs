@@ -34,9 +34,32 @@ namespace LocaFilms.Controllers
             var result = await _rentalService.CreateRental(movieRental);
 
             if (!result.Success)
-                return BadRequest($"Não foi possível criar o aluguel. Erro: {result.Message}");
+                return BadRequest(result.Message);
 
             return Created();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateRental(UpdateRentalDto updateRentalDto)
+        {
+            var movieRental = _mapper.Map<UpdateRentalDto, MovieRentals>(updateRentalDto);
+            var result = await _rentalService.UpdateRental(movieRental);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{userId:int}/{movieId:int}")]
+        public async Task<IActionResult> DeleteRental(int userId, int movieId)
+        {
+            var result = await _rentalService.DeleteRental(userId, movieId);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return NoContent();
         }
     }
 }
