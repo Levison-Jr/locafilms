@@ -50,6 +50,8 @@ namespace LocaFilms.Mapping
                 .ForMember(dest =>
                 dest.PaymentStatus,
                 opt => opt.MapFrom(_ => PaymentStatusEnum.Pendente));
+
+            CreateMap<UpdateRentalDto, MovieRentals>();
         }
     }
 }
