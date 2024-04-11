@@ -25,6 +25,11 @@ namespace LocaFilms.Services
             return await _rentalRepository.GetByUserIdAsync(userId);
         }
 
+        public async Task<MovieRentals?> GetByUserMovieIds(int userId, int movieId)
+        {
+            return await _rentalRepository.GetByUserMovieIds(userId, movieId);
+        }
+
         public async Task<RentalResponse> CreateRental(MovieRentals movieRental)
         {
             var user = await _userService.GetUserByIdAsync(movieRental.UserId);

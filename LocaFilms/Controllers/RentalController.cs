@@ -17,7 +17,7 @@ namespace LocaFilms.Controllers
             _rentalService = rentalService;
             _mapper = mapper;
         }
-
+        
         [HttpGet("user/{id:int}")]
         public async Task<IActionResult> GetRentalByUserId(int id)
         {
@@ -25,6 +25,17 @@ namespace LocaFilms.Controllers
             var result = _mapper.Map<IEnumerable<MovieRentals>, IEnumerable<RentalDto>>(rentals);
             
             return Ok(result);
+        }
+
+        [HttpGet("{userId:int}/{movieId:int}")]
+        public async Task<IActionResult> GetRentalByUserMovieIds(int userId, int movieId)
+        {
+            var rental = await _rentalService.GetByUserMovieIds(userId, movieId);
+
+            if (rental == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<MovieRentals?, RentalDto>(rental));
         }
 
         [HttpPost]
