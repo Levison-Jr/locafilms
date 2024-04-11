@@ -1,4 +1,5 @@
 ﻿using LocaFilms.Enums;
+using System.Text.Json.Serialization;
 
 namespace LocaFilms.Models
 {
@@ -14,6 +15,7 @@ namespace LocaFilms.Models
         public DateTime RegistrationDateTime { get; set; }
         public DateTime LastModifiedDateTime { get; set; }
 
+        [JsonIgnore]
         public IList<MovieRentals> MovieRentals { get; set; }
     }
 }

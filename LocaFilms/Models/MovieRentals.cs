@@ -1,4 +1,5 @@
 ﻿using LocaFilms.Enums;
+using System.Text.Json.Serialization;
 
 namespace LocaFilms.Models
 {
@@ -11,7 +12,9 @@ namespace LocaFilms.Models
         public RentalStatusEnum RentalStatus { get; set; }
         public PaymentStatusEnum PaymentStatus { get; set; }
 
+        [JsonIgnore]
         public UserModel User { get; set; }
+
         public MovieModel Movie { get; set; }
     }
 }
