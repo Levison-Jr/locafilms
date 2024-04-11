@@ -47,7 +47,10 @@ namespace LocaFilms.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            return Created();
+            return CreatedAtAction(
+                actionName: nameof(GetRentalByUserMovieIds),
+                routeValues: new { userId = movieRental.UserId, movieId = movieRental.MovieId },
+                value: _mapper.Map<MovieRentals?, RentalDto>(result.MovieRental));
         }
 
         [HttpPut]
