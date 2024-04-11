@@ -1,4 +1,5 @@
 ﻿using LocaFilms.Enums;
+using LocaFilms.Models;
 
 namespace LocaFilms.Dtos
 {
@@ -8,5 +9,6 @@ namespace LocaFilms.Dtos
         DateTime RentalStartDate,
         DateTime RentalEndDate,
         RentalStatusEnum RentalStatus,
-        PaymentStatusEnum PaymentStatus);
+        PaymentStatusEnum PaymentStatus,
+        MovieModel Movie);
 }
