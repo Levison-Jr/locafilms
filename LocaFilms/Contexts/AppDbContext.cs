@@ -7,12 +7,7 @@ namespace LocaFilms.Contexts
 {
     public class AppDbContext : IdentityDbContext<UserModel>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-            
-        }
-
-        public DbSet<UserModel> UserModel { get; set; }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
