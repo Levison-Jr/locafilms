@@ -1,8 +1,13 @@
 using LocaFilms.Contexts;
+using LocaFilms.Models;
 using LocaFilms.Repository;
 using LocaFilms.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LocaFilms
 {
@@ -13,17 +18,16 @@ namespace LocaFilms
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MainConnection"));
+                
             });
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -37,7 +41,13 @@ namespace LocaFilms
 
             builder.Services.AddAutoMapper(typeof(Program));
 
+            builder.Services.AddAuthorization();
+            builder.Services.AddIdentityApiEndpoints<UserModel>()
+                .AddEntityFrameworkStores<AppDbContext>();
+
             var app = builder.Build();
+            
+            app.MapIdentityApi<UserModel>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -46,11 +56,9 @@ namespace LocaFilms
                 app.UseSwaggerUI();
             }
 
+            app.UseExceptionHandler("/error");
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();

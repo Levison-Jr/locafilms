@@ -1,17 +1,18 @@
 ﻿using LocaFilms.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LocaFilms.Contexts
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<UserModel>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-            
-        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<MovieRentals>().HasKey(mr => new { mr.UserId, mr.MovieId });
 
             modelBuilder.Entity<MovieRentals>()
@@ -37,7 +38,6 @@ namespace LocaFilms.Contexts
                 .HasPrecision(18, 2);
         }
 
-        public DbSet<UserModel> Users { get; set; }
         public DbSet<MovieModel> Movies { get; set; }
         public DbSet<MovieRentals> MovieRentals { get; set; }
     }
