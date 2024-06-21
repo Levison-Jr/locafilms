@@ -1,7 +1,7 @@
 ﻿using LocaFilms.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace LocaFilms.Dtos
+namespace LocaFilms.Dtos.Request
 {
     public record CreateUserDto
     {

@@ -1,7 +1,7 @@
 ﻿using LocaFilms.Enums;
 using LocaFilms.Models;
 
-namespace LocaFilms.Dtos
+namespace LocaFilms.Dtos.Response
 {
     public record MovieDto(
         int Id,
