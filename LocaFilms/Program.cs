@@ -61,8 +61,6 @@ namespace LocaFilms
             });
 
             var app = builder.Build();
-            
-            app.MapIdentityApi<UserModel>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
