@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LocaFilms.Dtos;
+using LocaFilms.Dtos.Request;
 using LocaFilms.Enums;
 using LocaFilms.Models;
 
