@@ -1,5 +1,6 @@
 ﻿using LocaFilms.Contexts;
 using LocaFilms.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace LocaFilms.Repository
@@ -14,10 +15,9 @@ namespace LocaFilms.Repository
             return await _appDbContext.Users.ToListAsync();
         }
 
-        public async Task<UserModel?> GetByIdAsync(int id)
+        public async Task<UserModel?> GetByIdAsync(string id)
         {
-            UserModel? user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
-            return user;
+            return await _appDbContext.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task AddAsync(UserModel user)
