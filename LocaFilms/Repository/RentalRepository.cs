@@ -9,20 +9,17 @@ namespace LocaFilms.Repository
         public RentalRepository(AppDbContext appDbContext) : base(appDbContext)
         {}
 
-        public async Task<IEnumerable<MovieRentals>> GetByUserIdAsync(int id)
+        public async Task<IEnumerable<MovieRentals>> GetByUserIdAsync(string id)
         {
             return await _appDbContext.MovieRentals
-                .Where(x => x.UserId == id)
-                .Include(m => m.Movie)
+                .Where(u => u.UserId  == id)
+                .Include(mr => mr.Movie)
                 .ToListAsync();
         }
 
-        public async Task<MovieRentals?> GetByUserMovieIds(int userId, int movieId)
+        public async Task<MovieRentals?> GetByUserMovieIds(string userId, int movieId)
         {
-            return await _appDbContext.MovieRentals
-                .Where(x => x.UserId == userId && x.MovieId == movieId)
-                .Include(m => m.Movie)
-                .FirstOrDefaultAsync();
+            return await _appDbContext.MovieRentals.Where(mr => (mr.UserId == userId && mr.MovieId == movieId)).FirstAsync();
         }
 
         public async Task AddAsync(MovieRentals movieRental)

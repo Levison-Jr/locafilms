@@ -4,7 +4,7 @@ using LocaFilms.Models;
 namespace LocaFilms.Dtos.Response
 {
     public record RentalDto(
-        int UserId,
+        string UserId,
         int MovieId,
         DateTime RentalStartDate,
         DateTime RentalEndDate,

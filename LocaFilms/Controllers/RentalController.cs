@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using LocaFilms.Dtos;
+using LocaFilms.Dtos.Request;
+using LocaFilms.Dtos.Response;
 using LocaFilms.Models;
 using LocaFilms.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +19,8 @@ namespace LocaFilms.Controllers
             _mapper = mapper;
         }
         
-        [HttpGet("user/{id:int}")]
-        public async Task<IActionResult> GetRentalByUserId(int id)
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetRentalByUserId(string id)
         {
             var rentals = await _rentalService.GetByUserId(id);
             var result = _mapper.Map<IEnumerable<MovieRentals>, IEnumerable<RentalDto>>(rentals);
@@ -27,8 +28,8 @@ namespace LocaFilms.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{userId:int}/{movieId:int}")]
-        public async Task<IActionResult> GetRentalByUserMovieIds(int userId, int movieId)
+        [HttpGet("{userId}/{movieId:int}")]
+        public async Task<IActionResult> GetRentalByUserMovieIds(string userId, int movieId)
         {
             var rental = await _rentalService.GetByUserMovieIds(userId, movieId);
 
@@ -66,7 +67,7 @@ namespace LocaFilms.Controllers
         }
 
         [HttpDelete("{userId:int}/{movieId:int}")]
-        public async Task<IActionResult> DeleteRental(int userId, int movieId)
+        public async Task<IActionResult> DeleteRental(string userId, int movieId)
         {
             var result = await _rentalService.DeleteRental(userId, movieId);
 

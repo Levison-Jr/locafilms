@@ -20,12 +20,12 @@ namespace LocaFilms.Services
             _movieService = movieService;
         }
 
-        public async Task<IEnumerable<MovieRentals>> GetByUserId(int userId)
+        public async Task<IEnumerable<MovieRentals>> GetByUserId(string userId)
         {
             return await _rentalRepository.GetByUserIdAsync(userId);
         }
 
-        public async Task<MovieRentals?> GetByUserMovieIds(int userId, int movieId)
+        public async Task<MovieRentals?> GetByUserMovieIds(string userId, int movieId)
         {
             return await _rentalRepository.GetByUserMovieIds(userId, movieId);
         }
@@ -51,7 +51,7 @@ namespace LocaFilms.Services
 
         public async Task<RentalResponse> UpdateRental(MovieRentals movieRental)
         {
-            var rentalToUpdate = await _rentalRepository.GetByUserMovieIds(movieRental.UserId, movieRental.MovieId);
+            MovieRentals? rentalToUpdate = null;
 
             if (rentalToUpdate == null)
                 return new RentalResponse($"Não existe um aluguel do usuário com id {movieRental.UserId} para o filme com id {movieRental.MovieId}");
@@ -71,7 +71,7 @@ namespace LocaFilms.Services
             }
         }
 
-        public async Task<RentalResponse> DeleteRental(int userId, int movieId)
+        public async Task<RentalResponse> DeleteRental(string userId, int movieId)
         {
             var rentalToDelete = await _rentalRepository.GetByUserMovieIds(userId, movieId);
 
