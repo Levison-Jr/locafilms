@@ -1,17 +1,25 @@
 ﻿using LocaFilms.Dtos.Request;
-using LocaFilms.Dtos.Response;
 using LocaFilms.Models;
 using LocaFilms.Services.Communication;
+using LocaFilms.Services.Identity.Configurations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace LocaFilms.Services.Identity
 {
     public class IdentityService : IIdentityService
     {
         private readonly AspNetUserManager<UserModel> _aspNetUserManager;
-        public IdentityService(AspNetUserManager<UserModel> aspNetUserManager)
+        private readonly SignInManager<UserModel> _signInManager;
+        private readonly JwtOptions _jwtOptions;
+        public IdentityService(AspNetUserManager<UserModel> aspNetUserManager,
+                               SignInManager<UserModel> signInManager,
+                               IOptions<JwtOptions> jwtOptions)
         {
             _aspNetUserManager = aspNetUserManager;
+            _signInManager = signInManager;
+            _jwtOptions = jwtOptions.Value;
         }
 
         public async Task<UserResponse> Register(CreateUserDto createUserDto)

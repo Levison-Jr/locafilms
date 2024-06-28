@@ -28,8 +28,7 @@ namespace LocaFilms
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("MainConnection"));
-                
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MainConnection"));            
             });
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -43,6 +42,7 @@ namespace LocaFilms
 
             builder.Services.AddScoped<IIdentityService, IdentityService>();
             builder.Services.AddScoped<AspNetUserManager<UserModel>>();
+            builder.Services.AddScoped<SignInManager<UserModel>>();
 
             builder.Services.AddAutoMapper(typeof(Program));
 
