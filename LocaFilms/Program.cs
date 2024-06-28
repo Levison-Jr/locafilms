@@ -3,8 +3,12 @@ using LocaFilms.Models;
 using LocaFilms.Repository;
 using LocaFilms.Services;
 using LocaFilms.Services.Identity;
+using LocaFilms.Services.Identity.Configurations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace LocaFilms
@@ -43,8 +47,60 @@ namespace LocaFilms
             builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddAuthorization();
-            builder.Services.AddIdentityApiEndpoints<UserModel>()
-                .AddEntityFrameworkStores<AppDbContext>();
+
+            builder.Services.AddDefaultIdentity<UserModel>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
+            var securityKeySettings = builder.Configuration.GetSection("JwtOptions:SecurityKey").Value;
+            var jwtOptionsSettings = builder.Configuration.GetSection(nameof(JwtOptions));
+
+            if (string.IsNullOrEmpty(securityKeySettings))
+            {
+                throw new SecurityTokenException("A JWT Security Key não está configurada.");
+            }
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKeySettings));
+
+            builder.Services.Configure<JwtOptions>(options =>
+            {
+                options.Issuer = jwtOptionsSettings[nameof(JwtOptions.Issuer)] ?? "invalidIssuer";
+                options.Audience = jwtOptionsSettings[nameof(JwtOptions.Audience)] ?? "invalidAudience";
+                options.AccessTokenExpiration = int.Parse(jwtOptionsSettings[nameof(JwtOptions.AccessTokenExpiration)] ?? "0");
+                options.RefreshTokenExpiration = int.Parse(jwtOptionsSettings[nameof(JwtOptions.RefreshTokenExpiration)] ?? "0");
+                options.SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
+            });
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration.GetSection("JwtOptions:Issuer").Value,
+
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration.GetSection("JwtOptions:Audience").Value,
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = securityKey,
+
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true,
+
+                    // Distorção/Atraso do timer/relógio utilizado na validação de horários
+                    // Ex.: Validação do tempo de expiração de tokens
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
@@ -71,7 +127,10 @@ namespace LocaFilms
 
             app.UseExceptionHandler("/error");
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapControllers();
 
             app.Run();
