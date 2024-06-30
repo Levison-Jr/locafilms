@@ -46,8 +46,6 @@ namespace LocaFilms
 
             builder.Services.AddAutoMapper(typeof(Program));
 
-            builder.Services.AddAuthorization();
-
             builder.Services.AddDefaultIdentity<UserModel>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -101,6 +99,8 @@ namespace LocaFilms
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            builder.Services.AddAuthorization();
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
