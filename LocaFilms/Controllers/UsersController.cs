@@ -4,6 +4,7 @@ using LocaFilms.Dtos.Response;
 using LocaFilms.Models;
 using LocaFilms.Services;
 using LocaFilms.Services.Identity;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,7 +51,7 @@ namespace LocaFilms.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(CreateUserDto createUserDto)
         {
-            var result = await _identityService.Register(createUserDto);
+            var result = await _identityService.Register(createUserDto.Email, createUserDto.Password);
 
             if (!result.Success)
                 return BadRequest(new ProblemDetails {
@@ -64,6 +65,23 @@ namespace LocaFilms.Controllers
                 actionName: nameof(GetUserById),
                 routeValues: new { id = result.User?.Id },
                 value: _mapper.Map<UserModel?, UserDto>(result.User));
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            var result = await _identityService.Login(loginDto.Email, loginDto.Password);
+
+            if (!result.Success)
+                return Unauthorized(new ProblemDetails
+                {
+                    Title = "Houve um erro na requisição.",
+                    Detail = result.Message,
+                    Status = StatusCodes.Status401Unauthorized,
+                    Instance = HttpContext.Request.Path
+                });
+
+            return Ok(result);
         }
 
         [HttpPut("{id}")]

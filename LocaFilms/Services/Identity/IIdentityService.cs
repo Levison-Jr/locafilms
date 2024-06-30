@@ -6,6 +6,7 @@ namespace LocaFilms.Services.Identity
 {
     public interface IIdentityService
     {
-        Task<UserResponse> Register(CreateUserDto createUserDto); 
+        Task<UserResponse> Register(string email, string password);
+        Task<UserLoginResponse> Login(string email, string password);
     }
 }

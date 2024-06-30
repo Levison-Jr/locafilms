@@ -23,18 +23,18 @@ namespace LocaFilms.Services.Identity
             _jwtOptions = jwtOptions.Value;
         }
 
-        public async Task<UserResponse> Register(CreateUserDto createUserDto)
+        public async Task<UserResponse> Register(string email, string password)
         {
             var user = new UserModel()
             {
-                Email = createUserDto.Email,
-                UserName = createUserDto.Email,
+                Email = email,
+                UserName = email,
                 EmailConfirmed = true
             };
 
             try
             {
-                var result = await _aspNetUserManager.CreateAsync(user, createUserDto.Password ?? "");
+                var result = await _aspNetUserManager.CreateAsync(user, password);
 
                 if (!result.Succeeded)
                 {
@@ -49,6 +49,25 @@ namespace LocaFilms.Services.Identity
             }
         }
 
+        public async Task<UserLoginResponse> Login(string email, string password)
+        {
+            var check = await _signInManager.PasswordSignInAsync(email, password, false, true);
+
+            if (check.Succeeded)
+                return new UserLoginResponse(
+                    success: true,
+                    message: string.Empty,
+                    accessToken: await GerarTokenJwt(email));
+
+            string failMessage = "O email e/ou senha estão incorretos.";
+            if (check.IsLockedOut)
+                failMessage = "Este usuário está bloqueado.";
+            else if (check.IsNotAllowed)
+                failMessage = "Este usuário não tem permissão para realizar o login.";
+
+            return new UserLoginResponse(false, failMessage, string.Empty);
+        }
+
         private async Task<string> GerarTokenJwt(string email)
         {
             var user = await _aspNetUserManager.FindByEmailAsync(email);
@@ -60,8 +79,8 @@ namespace LocaFilms.Services.Identity
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Nbf, DateTime.Now.ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString()),
+                new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
                 .. await _aspNetUserManager.GetClaimsAsync(user),
             ];
 
