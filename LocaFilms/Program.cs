@@ -1,4 +1,5 @@
 using LocaFilms.Contexts;
+using LocaFilms.Extensions;
 using LocaFilms.Models;
 using LocaFilms.Repository;
 using LocaFilms.Services;
@@ -15,7 +16,7 @@ namespace LocaFilms
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -124,7 +125,7 @@ namespace LocaFilms
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            
             app.UseExceptionHandler("/error");
             app.UseHttpsRedirection();
 
@@ -132,6 +133,9 @@ namespace LocaFilms
             app.UseAuthorization();
 
             app.MapControllers();
+
+            await app.CreateRolesAsync();
+            await app.CreateDefaultUserAsync();
 
             app.Run();
         }
