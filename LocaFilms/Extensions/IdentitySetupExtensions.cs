@@ -22,14 +22,17 @@ namespace LocaFilms.Extensions
             }
         }
 
-        public static async Task CreateDefaultUserAsync(this WebApplication app)
+        public static async Task CreateDefaultUserAsync(this WebApplication app, IConfiguration configuration)
         {
             using (var scope = app.Services.CreateScope())
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<AspNetUserManager<UserModel>>();
-                
-                string email = "levisonjr21@gmail.com";
-                string password = "PASSword@123";
+
+                string? email = configuration.GetValue<string>("ADMIN_EMAIL");
+                string? password = configuration.GetValue<string>("ADMIN_PASSWORD");
+
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+                    throw new MissingFieldException("Admin Default: Email e/ou Password não configurados como variáveis de ambiente");
 
                 if (await userManager.FindByEmailAsync(email) == null)
                 {

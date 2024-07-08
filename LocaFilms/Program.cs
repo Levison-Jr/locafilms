@@ -8,6 +8,7 @@ using LocaFilms.Services.Identity.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -135,7 +136,7 @@ namespace LocaFilms
             app.MapControllers();
 
             await app.CreateRolesAsync();
-            await app.CreateDefaultUserAsync();
+            await app.CreateDefaultUserAsync(builder.Configuration);
 
             app.Run();
         }
