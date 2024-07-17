@@ -5,10 +5,10 @@ using LocaFilms.Repository;
 using LocaFilms.Services;
 using LocaFilms.Services.Identity;
 using LocaFilms.Services.Identity.Configurations;
+using LocaFilms.Services.Identity.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -30,7 +30,7 @@ namespace LocaFilms
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("MainConnection"));            
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MainConnection"));
             });
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -102,7 +102,11 @@ namespace LocaFilms
                 };
             });
 
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.isEmployee, policy => 
+                    policy.RequireRole(Roles.Admin, Roles.Employee));
+            });
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
@@ -126,7 +130,7 @@ namespace LocaFilms
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            
+
             app.UseExceptionHandler("/error");
             app.UseHttpsRedirection();
 
