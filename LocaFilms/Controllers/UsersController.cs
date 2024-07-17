@@ -4,7 +4,7 @@ using LocaFilms.Dtos.Response;
 using LocaFilms.Models;
 using LocaFilms.Services;
 using LocaFilms.Services.Identity;
-using Microsoft.AspNetCore.Authentication.BearerToken;
+using LocaFilms.Services.Identity.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +28,7 @@ namespace LocaFilms.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Policy = Policies.isEmployee)]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -37,6 +38,7 @@ namespace LocaFilms.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = Policies.isEmployee)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(string id)
         {
@@ -51,6 +53,9 @@ namespace LocaFilms.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(CreateUserDto createUserDto)
         {
+            if (string.IsNullOrEmpty(createUserDto.Email) || string.IsNullOrEmpty(createUserDto.Password))
+                return BadRequest();
+
             var result = await _identityService.Register(createUserDto.Email, createUserDto.Password);
 
             if (!result.Success)
@@ -70,6 +75,9 @@ namespace LocaFilms.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
+            if (string.IsNullOrEmpty(loginDto.Email) || string.IsNullOrEmpty(loginDto.Password))
+                return BadRequest();
+
             var result = await _identityService.Login(loginDto.Email, loginDto.Password);
 
             if (!result.Success)
@@ -84,6 +92,7 @@ namespace LocaFilms.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = Policies.isEmployee)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, UpdateUserDto updateUserDto)
         {
@@ -96,11 +105,12 @@ namespace LocaFilms.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var result = await _userService.DeleteUserAsync(id);
-
+            
             if (!result.Success)
                 return BadRequest(result.Message);
 
