@@ -1,7 +1,7 @@
-﻿using LocaFilms.Dtos.Request;
-using LocaFilms.Models;
+﻿using LocaFilms.Models;
 using LocaFilms.Services.Communication;
 using LocaFilms.Services.Identity.Configurations;
+using LocaFilms.Services.Identity.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,6 +14,7 @@ namespace LocaFilms.Services.Identity
         private readonly AspNetUserManager<UserModel> _aspNetUserManager;
         private readonly SignInManager<UserModel> _signInManager;
         private readonly JwtOptions _jwtOptions;
+
         public IdentityService(AspNetUserManager<UserModel> aspNetUserManager,
                                SignInManager<UserModel> signInManager,
                                IOptions<JwtOptions> jwtOptions)
@@ -41,6 +42,7 @@ namespace LocaFilms.Services.Identity
                     return new UserResponse($"Não foi possível cadastrar o usuário. ${result.Errors.Select(e => e.Description).First()}");
                 }
 
+                await _aspNetUserManager.AddToRoleAsync(user, Roles.Customer);
                 return new UserResponse(user);
             }
             catch (Exception ex)
