@@ -3,10 +3,13 @@ using LocaFilms.Dtos.Request;
 using LocaFilms.Dtos.Response;
 using LocaFilms.Models;
 using LocaFilms.Services;
+using LocaFilms.Services.Identity.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocaFilms.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RentalController : ControllerBase
@@ -46,7 +49,13 @@ namespace LocaFilms.Controllers
             var result = await _rentalService.CreateRental(movieRental);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Houve um erro na requisição.",
+                    Detail = result.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    Instance = HttpContext.Request.Path
+                });
 
             return CreatedAtAction(
                 actionName: nameof(GetRentalByUserMovieIds),
@@ -54,6 +63,7 @@ namespace LocaFilms.Controllers
                 value: _mapper.Map<MovieRentals?, RentalDto>(result.MovieRental));
         }
 
+        [Authorize(Policy = Policies.isEmployee)]
         [HttpPut]
         public async Task<IActionResult> UpdateRental(UpdateRentalDto updateRentalDto)
         {
@@ -61,18 +71,31 @@ namespace LocaFilms.Controllers
             var result = await _rentalService.UpdateRental(movieRental);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Houve um erro na requisição.",
+                    Detail = result.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    Instance = HttpContext.Request.Path
+                });
 
             return NoContent();
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{userId:int}/{movieId:int}")]
         public async Task<IActionResult> DeleteRental(string userId, int movieId)
         {
             var result = await _rentalService.DeleteRental(userId, movieId);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Houve um erro na requisição.",
+                    Detail = result.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    Instance = HttpContext.Request.Path
+                });
 
             return NoContent();
         }
