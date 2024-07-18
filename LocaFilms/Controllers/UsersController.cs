@@ -3,6 +3,7 @@ using LocaFilms.Dtos.Request;
 using LocaFilms.Dtos.Response;
 using LocaFilms.Models;
 using LocaFilms.Services;
+using LocaFilms.Services.Communication;
 using LocaFilms.Services.Identity;
 using LocaFilms.Services.Identity.Constants;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,8 @@ namespace LocaFilms.Controllers
             _mapper = mapper;
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserDto>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize(Policy = Policies.isEmployee)]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
@@ -38,6 +41,9 @@ namespace LocaFilms.Controllers
             return Ok(result);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize(Policy = Policies.isEmployee)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(string id)
@@ -50,6 +56,8 @@ namespace LocaFilms.Controllers
             return Ok(_mapper.Map<UserModel, UserDto>(user));
         }
 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(CreateUserDto createUserDto)
         {
@@ -72,6 +80,9 @@ namespace LocaFilms.Controllers
                 value: _mapper.Map<UserModel?, UserDto>(result.User));
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserLoginResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
@@ -92,6 +103,9 @@ namespace LocaFilms.Controllers
             return Ok(result);
         }
 
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize(Policy = Policies.isEmployee)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, UpdateUserDto updateUserDto)
@@ -100,11 +114,20 @@ namespace LocaFilms.Controllers
             var result = await _userService.UpdateUserAsync(id, user);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Houve um erro na requisição.",
+                    Detail = result.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    Instance = HttpContext.Request.Path
+                });
 
             return NoContent();
         }
 
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
@@ -112,7 +135,13 @@ namespace LocaFilms.Controllers
             var result = await _userService.DeleteUserAsync(id);
             
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Houve um erro na requisição.",
+                    Detail = result.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    Instance = HttpContext.Request.Path
+                });
 
             return NoContent();
         }
