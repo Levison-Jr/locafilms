@@ -2,7 +2,6 @@
 using LocaFilms.Repository;
 using LocaFilms.Services.Communication;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace LocaFilms.Services
 {
@@ -36,14 +35,15 @@ namespace LocaFilms.Services
 
             userToUpdate.FirstName = user.FirstName;
             userToUpdate.LastName = user.LastName;
-            userToUpdate.UserName = user.UserName;
-            userToUpdate.Email = user.Email;
             userToUpdate.PhoneNumber = user.PhoneNumber;
-            userToUpdate.Balance = user.Balance;
 
             try
             {
-                await _userRepository.UpdateAsync(userToUpdate);
+                var result = await _userManager.UpdateAsync(userToUpdate);
+                
+                if (!result.Succeeded)
+                    return new UserResponse($"Não foi possível atualizar o usuário (id = {id}). Erro: {result.Errors.Select(e => e.Description).First()}");
+
                 return new UserResponse(userToUpdate);
             }
             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace LocaFilms.Services
 
             try
             {
-                await _userRepository.DeleteAsync(userToDelete);
+                await _userManager.DeleteAsync(userToDelete);
                 return new UserResponse(userToDelete);
             }
             catch (Exception ex)
