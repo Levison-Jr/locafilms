@@ -21,7 +21,9 @@ namespace LocaFilms.Controllers
             _rentalService = rentalService;
             _mapper = mapper;
         }
-        
+
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RentalDto>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetRentalByUserId(string id)
         {
@@ -31,6 +33,9 @@ namespace LocaFilms.Controllers
             return Ok(result);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RentalDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet("{userId}/{movieId:int}")]
         public async Task<IActionResult> GetRentalByUserMovieIds(string userId, int movieId)
         {
@@ -42,6 +47,9 @@ namespace LocaFilms.Controllers
             return Ok(_mapper.Map<MovieRentals?, RentalDto>(rental));
         }
 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RentalDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost]
         public async Task<IActionResult> CreateRental(CreateRentalDto createRentalDto)
         {
@@ -63,6 +71,9 @@ namespace LocaFilms.Controllers
                 value: _mapper.Map<MovieRentals?, RentalDto>(result.MovieRental));
         }
 
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize(Policy = Policies.isEmployee)]
         [HttpPut]
         public async Task<IActionResult> UpdateRental(UpdateRentalDto updateRentalDto)
@@ -82,6 +93,9 @@ namespace LocaFilms.Controllers
             return NoContent();
         }
 
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{userId:int}/{movieId:int}")]
         public async Task<IActionResult> DeleteRental(string userId, int movieId)
