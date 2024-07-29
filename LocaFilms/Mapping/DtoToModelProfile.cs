@@ -18,8 +18,8 @@ namespace LocaFilms.Mapping
 
             CreateMap<CreateMovieDto, MovieModel>()
                 .ForMember(dest =>
-                dest.IsAvailable,
-                opt => opt.MapFrom(_ => true))
+                dest.Status,
+                opt => opt.MapFrom(_ => MovieStatusEnum.isAvailable))
 
                 .ForMember(dest =>
                 dest.RegistrationDateTime,

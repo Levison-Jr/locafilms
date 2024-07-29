@@ -50,9 +50,8 @@ namespace LocaFilms.Services
             movieToUpdate.Title = movie.Title;
             movieToUpdate.Description = movie.Description;
             movieToUpdate.Category = movie.Category;
-            movieToUpdate.IsAvailable = movie.IsAvailable;
+            movieToUpdate.Status = movie.Status;
             movieToUpdate.CostPerDay = movie.CostPerDay;
-            movieToUpdate.NumberPhysicalMedia = movie.NumberPhysicalMedia;
             movieToUpdate.LastModifiedDateTime = movie.LastModifiedDateTime;
 
             try

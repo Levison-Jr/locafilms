@@ -1,5 +1,4 @@
 ﻿using LocaFilms.Enums;
-using LocaFilms.Models;
 
 namespace LocaFilms.Dtos.Response
 {
@@ -7,10 +6,9 @@ namespace LocaFilms.Dtos.Response
         int Id,
         string Title,
         string Description,
-        CategoryEnum Category,
-        bool IsAvailable,
+        string Category,
+        MovieStatusEnum Status,
         decimal CostPerDay,
-        int NumberPhysicalMedia,
         DateTime RegistrationDateTime,
         DateTime LastModifiedDateTime);
 }

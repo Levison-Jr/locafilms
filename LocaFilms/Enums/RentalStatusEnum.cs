@@ -3,6 +3,7 @@
     public enum RentalStatusEnum
     {
         EmAndamento = 1,
+        AguardandoRetirada,
         Finalizado
     }
 }
