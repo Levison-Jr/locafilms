@@ -5,11 +5,8 @@ namespace LocaFilms.Dtos.Request
 {
     public record UpdateRentalDto
     {
-        [Required(ErrorMessage = "O campo UserId é obrigatório.")]
-        public string? UserId { get; set; }
-
-        [Required(ErrorMessage = "O campo MovieId é obrigatório.")]
-        public int? MovieId { get; set; }
+        [Required(ErrorMessage = "O campo RentalId é obrigatório.")]
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo RentalEndDate é obrigatório.")]
         public DateTime? RentalEndDate { get; set; }

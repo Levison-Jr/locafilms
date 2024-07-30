@@ -34,14 +34,7 @@ namespace LocaFilms.Mapping
                 dest.LastModifiedDateTime,
                 opt => opt.MapFrom(_ => DateTime.Now));
 
-            CreateMap<CreateRentalDto, MovieRentals>()
-                .ForMember(dest =>
-                dest.RentalStatus,
-                opt => opt.MapFrom(_ => RentalStatusEnum.EmAndamento))
-
-                .ForMember(dest =>
-                dest.PaymentStatus,
-                opt => opt.MapFrom(_ => PaymentStatusEnum.Pendente));
+            CreateMap<CreateRentalDto, MovieRentals>();
 
             CreateMap<UpdateRentalDto, MovieRentals>();
         }
