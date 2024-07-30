@@ -13,8 +13,6 @@ namespace LocaFilms.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<MovieRentals>().HasKey(mr => new { mr.UserId, mr.MovieId });
-
             modelBuilder.Entity<MovieRentals>()
                 .HasOne<UserModel>(mr => mr.User)
                 .WithMany(u => u.MovieRentals)
