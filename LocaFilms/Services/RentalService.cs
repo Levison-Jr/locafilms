@@ -20,6 +20,11 @@ namespace LocaFilms.Services
             _movieService = movieService;
         }
 
+        public async Task<MovieRentals?> GetById(int id)
+        {
+            return await _rentalRepository.GetByIdAsync(id);
+        }
+
         public async Task<IEnumerable<MovieRentals>> GetByUserId(string userId)
         {
             return await _rentalRepository.GetByUserIdAsync(userId);

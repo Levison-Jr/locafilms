@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LocaFilms.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class RentalController : ControllerBase
@@ -20,6 +20,20 @@ namespace LocaFilms.Controllers
         {
             _rentalService = rentalService;
             _mapper = mapper;
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RentalDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetRentalById(int id)
+        {
+            var rental = await _rentalService.GetById(id);
+
+            if (rental == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<MovieRentals?, RentalDto>(rental));
         }
 
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RentalDto>))]

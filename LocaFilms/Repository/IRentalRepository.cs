@@ -5,6 +5,7 @@ namespace LocaFilms.Repository
 {
     public interface IRentalRepository
     {
+        Task<MovieRentals?> GetByIdAsync(int id);
         Task<IEnumerable<MovieRentals>> GetByUserIdAsync(string id);
         Task<MovieRentals?> GetByUserMovieIds(string userId, int movieId);
         Task AddAsync(MovieRentals movieRental);

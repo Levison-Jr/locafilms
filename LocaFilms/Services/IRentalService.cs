@@ -5,6 +5,7 @@ namespace LocaFilms.Services
 {
     public interface IRentalService
     {
+        Task<MovieRentals?> GetById(int id);
         Task<IEnumerable<MovieRentals>> GetByUserId(string userId);
         Task<MovieRentals?> GetByUserMovieIds(string userId, int movieId);
         Task<RentalResponse> CreateRental(MovieRentals movieRental);
