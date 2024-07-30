@@ -5,6 +5,7 @@ namespace LocaFilms.Models
 {
     public class MovieRentals
     {
+        public int Id { get; set; }
         public string UserId { get; set; }
         public int MovieId { get; set; }
         public DateTime RentalStartDate { get; set; }
