@@ -1,4 +1,5 @@
-﻿using LocaFilms.Models;
+﻿using LocaFilms.Enums;
+using LocaFilms.Models;
 using System.Collections;
 
 namespace LocaFilms.Repository
@@ -7,7 +8,7 @@ namespace LocaFilms.Repository
     {
         Task<MovieRentals?> GetByIdAsync(int id);
         Task<IEnumerable<MovieRentals>> GetByUserIdAsync(string id);
-        Task<MovieRentals?> GetByUserMovieIds(string userId, int movieId);
+        Task<IEnumerable<MovieRentals>> GetByUserMovieIds(string userId, int movieId, List<RentalStatusEnum> rentalStatus);
         Task AddAsync(MovieRentals movieRental);
         Task UpdateAsync(MovieRentals movieRental);
         Task DeleteAsync(MovieRentals movieRental);

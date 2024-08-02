@@ -1,4 +1,5 @@
 ﻿using LocaFilms.Contexts;
+using LocaFilms.Enums;
 using LocaFilms.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,11 +26,18 @@ namespace LocaFilms.Repository
                 .ToListAsync();
         }
 
-        public async Task<MovieRentals?> GetByUserMovieIds(string userId, int movieId)
+        public async Task<IEnumerable<MovieRentals>> GetByUserMovieIds(
+            string userId,
+            int movieId,
+            List<RentalStatusEnum> rentalStatusFilter)
         {
-            return await _appDbContext.MovieRentals
-                .Where(mr => mr.UserId == userId && mr.MovieId == movieId)
-                .FirstOrDefaultAsync();
+            var query = _appDbContext.MovieRentals
+                .Where(mr => mr.UserId == userId && mr.MovieId == movieId);
+
+            if (rentalStatusFilter.Count != 0)
+                query = query.Where(mr => rentalStatusFilter.Contains(mr.RentalStatus));
+
+            return await query.ToListAsync();
         }
 
         public async Task AddAsync(MovieRentals movieRental)
