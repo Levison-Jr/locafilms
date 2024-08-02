@@ -58,7 +58,7 @@ namespace LocaFilms.Controllers
             if (rental == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<MovieRentals?, RentalDto>(rental));
+            return Ok(_mapper.Map<IEnumerable<RentalDto>>(rental));
         }
 
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RentalDto))]
@@ -111,10 +111,10 @@ namespace LocaFilms.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize(Roles = Roles.Admin)]
-        [HttpDelete("{userId:int}/{movieId:int}")]
-        public async Task<IActionResult> DeleteRental(string userId, int movieId)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteRental(int id)
         {
-            var result = await _rentalService.DeleteRental(userId, movieId);
+            var result = await _rentalService.DeleteRental(id);
 
             if (!result.Success)
                 return BadRequest(new ProblemDetails
