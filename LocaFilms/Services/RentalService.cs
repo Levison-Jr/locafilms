@@ -1,4 +1,5 @@
-﻿using LocaFilms.Models;
+﻿using LocaFilms.Enums;
+using LocaFilms.Models;
 using LocaFilms.Repository;
 using LocaFilms.Services.Communication;
 
@@ -30,18 +31,21 @@ namespace LocaFilms.Services
             return await _rentalRepository.GetByUserIdAsync(userId);
         }
 
-        public async Task<MovieRentals?> GetByUserMovieIds(string userId, int movieId)
+        public async Task<IEnumerable<MovieRentals>> GetByUserMovieIds(string userId, int movieId)
         {
-            return await _rentalRepository.GetByUserMovieIds(userId, movieId);
+            return await _rentalRepository.GetByUserMovieIds(userId, movieId, []);
         }
 
         public async Task<RentalResponse> CreateRental(MovieRentals movieRental)
         {
             var user = await _userService.GetUserByIdAsync(movieRental.UserId);
             var movie = await _movieService.GetMovieByIdAsync(movieRental.MovieId);
-
             if (user == null || movie == null)
-                return new RentalResponse("O usuário e/ou o filme não está cadastrado.");
+                return new RentalResponse($"O usuário ({movieRental.UserId}) e/ou o filme {movieRental.MovieId} não está cadastrado.");
+
+            var check = await CheckActiveExistingRental(movieRental.UserId, movieRental.MovieId);
+            if (check)
+                return new RentalResponse($"Já existe um aluguel NÃO FINALIZADO do usuário {movieRental.UserId} para o filme {movieRental.MovieId}");
 
             try
             {
@@ -56,7 +60,7 @@ namespace LocaFilms.Services
 
         public async Task<RentalResponse> UpdateRental(MovieRentals movieRental)
         {
-            var rentalToUpdate = await GetByUserMovieIds(movieRental.UserId, movieRental.MovieId);
+            var rentalToUpdate = await GetById(movieRental.Id);
 
             if (rentalToUpdate == null)
                 return new RentalResponse($"Não existe um aluguel do usuário com id {movieRental.UserId} para o filme com id {movieRental.MovieId}");
@@ -76,12 +80,12 @@ namespace LocaFilms.Services
             }
         }
 
-        public async Task<RentalResponse> DeleteRental(string userId, int movieId)
+        public async Task<RentalResponse> DeleteRental(int id)
         {
-            var rentalToDelete = await GetByUserMovieIds(userId, movieId);
+            var rentalToDelete = await GetById(id);
 
             if (rentalToDelete == null)
-                return new RentalResponse($"Não existe um aluguel do usuário com id {userId} para o filme com id {movieId}");
+                return new RentalResponse($"Não existe um aluguel com id {id}");
 
             try
             {
@@ -91,6 +95,23 @@ namespace LocaFilms.Services
             catch (Exception ex)
             {
                 return new RentalResponse($"Não foi possível deletar o MovieRental. Erro: {ex.Message}");
+            }
+        }
+
+        public async Task<bool> CheckActiveExistingRental(string userId, int movieId)
+        {
+            try
+            {
+                var rental = await _rentalRepository.GetByUserMovieIds(
+                            userId,
+                            movieId,
+                            [RentalStatusEnum.AguardandoRetirada, RentalStatusEnum.EmAndamento]);
+
+                return rental.Any();
+            }
+            catch (Exception)
+            {
+                return true;
             }
         }
     }
