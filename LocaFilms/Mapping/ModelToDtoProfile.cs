@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LocaFilms.Dtos;
+using LocaFilms.Dtos.Response;
 using LocaFilms.Models;
 
 namespace LocaFilms.Mapping

@@ -1,4 +1,5 @@
 ﻿using LocaFilms.Contexts;
+using LocaFilms.Enums;
 using LocaFilms.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,20 +10,34 @@ namespace LocaFilms.Repository
         public RentalRepository(AppDbContext appDbContext) : base(appDbContext)
         {}
 
-        public async Task<IEnumerable<MovieRentals>> GetByUserIdAsync(int id)
+        public async Task<MovieRentals?> GetByIdAsync(int id)
         {
             return await _appDbContext.MovieRentals
-                .Where(x => x.UserId == id)
-                .Include(m => m.Movie)
+                .Where(mr => mr.Id == id)
+                .Include(mr => mr.Movie)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<MovieRentals>> GetByUserIdAsync(string id)
+        {
+            return await _appDbContext.MovieRentals
+                .Where(u => u.UserId == id)
+                .Include(mr => mr.Movie)
                 .ToListAsync();
         }
 
-        public async Task<MovieRentals?> GetByUserMovieIds(int userId, int movieId)
+        public async Task<IEnumerable<MovieRentals>> GetByUserMovieIds(
+            string userId,
+            int movieId,
+            List<RentalStatusEnum> rentalStatusFilter)
         {
-            return await _appDbContext.MovieRentals
-                .Where(x => x.UserId == userId && x.MovieId == movieId)
-                .Include(m => m.Movie)
-                .FirstOrDefaultAsync();
+            var query = _appDbContext.MovieRentals
+                .Where(mr => mr.UserId == userId && mr.MovieId == movieId);
+
+            if (rentalStatusFilter.Count != 0)
+                query = query.Where(mr => rentalStatusFilter.Contains(mr.RentalStatus));
+
+            return await query.ToListAsync();
         }
 
         public async Task AddAsync(MovieRentals movieRental)

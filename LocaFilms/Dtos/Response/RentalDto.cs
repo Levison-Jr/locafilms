@@ -1,10 +1,11 @@
 ﻿using LocaFilms.Enums;
 using LocaFilms.Models;
 
-namespace LocaFilms.Dtos
+namespace LocaFilms.Dtos.Response
 {
     public record RentalDto(
-        int UserId,
+        int Id,
+        string UserId,
         int MovieId,
         DateTime RentalStartDate,
         DateTime RentalEndDate,

@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
-using LocaFilms.Dtos;
+using LocaFilms.Dtos.Request;
+using LocaFilms.Dtos.Response;
 using LocaFilms.Models;
 using LocaFilms.Services;
+using LocaFilms.Services.Identity.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocaFilms.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase
@@ -19,6 +23,8 @@ namespace LocaFilms.Controllers
             _mapper = mapper;
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieDto>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet]
         public async Task<IActionResult> GetAllMovies()
         {
@@ -28,6 +34,9 @@ namespace LocaFilms.Controllers
             return Ok(result);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MovieDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetMovieById(int id)
         {
@@ -36,9 +45,13 @@ namespace LocaFilms.Controllers
             if (movie == null)
                 return NotFound();
 
-            return Ok(movie);
+            return Ok(_mapper.Map<MovieModel, MovieDto>(movie));
         }
 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MovieDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize(Policy = Policies.isEmployee)]
         [HttpPost]
         public async Task<IActionResult> CreateMovie(CreateMovieDto createMovieDto)
         {
@@ -46,7 +59,13 @@ namespace LocaFilms.Controllers
             var result = await _movieService.CreateMovieAsync(movie);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Houve um erro na requisição.",
+                    Detail = result.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    Instance = HttpContext.Request.Path
+                });
 
             return CreatedAtAction(
                 actionName: nameof(GetMovieById),
@@ -54,6 +73,10 @@ namespace LocaFilms.Controllers
                 value: _mapper.Map<MovieModel?, MovieDto>(result.Movie));
         }
 
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize(Policy = Policies.isEmployee)]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateMovie(int id, UpdateMovieDto updateMovieDto)
         {
@@ -61,18 +84,34 @@ namespace LocaFilms.Controllers
             var result = await _movieService.UpdateMovieAsync(id, movie);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Houve um erro na requisição.",
+                    Detail = result.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    Instance = HttpContext.Request.Path
+                });
 
             return NoContent();
         }
 
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize(Policy = Policies.isEmployee)]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
             var result = await _movieService.DeleteMovieAsync(id);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Houve um erro na requisição.",
+                    Detail = result.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    Instance = HttpContext.Request.Path
+                });
 
             return NoContent();
         }

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LocaFilms.Dtos;
+using LocaFilms.Dtos.Request;
 using LocaFilms.Enums;
 using LocaFilms.Models;
 
@@ -18,8 +18,8 @@ namespace LocaFilms.Mapping
 
             CreateMap<CreateMovieDto, MovieModel>()
                 .ForMember(dest =>
-                dest.IsAvailable,
-                opt => opt.MapFrom(_ => true))
+                dest.Status,
+                opt => opt.MapFrom(_ => MovieStatusEnum.isAvailable))
 
                 .ForMember(dest =>
                 dest.RegistrationDateTime,
@@ -34,14 +34,7 @@ namespace LocaFilms.Mapping
                 dest.LastModifiedDateTime,
                 opt => opt.MapFrom(_ => DateTime.Now));
 
-            CreateMap<CreateRentalDto, MovieRentals>()
-                .ForMember(dest =>
-                dest.RentalStatus,
-                opt => opt.MapFrom(_ => RentalStatusEnum.EmAndamento))
-
-                .ForMember(dest =>
-                dest.PaymentStatus,
-                opt => opt.MapFrom(_ => PaymentStatusEnum.Pendente));
+            CreateMap<CreateRentalDto, MovieRentals>();
 
             CreateMap<UpdateRentalDto, MovieRentals>();
         }
